@@ -1,0 +1,1 @@
+const WWW = "http://" + $_SERVER["HTTP_HOST"] + "/cd2tec_naimayer/";
