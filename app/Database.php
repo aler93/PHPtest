@@ -6,6 +6,8 @@ use MongoDB\Driver\Query;
 
 class Database
 {
+    public $status;
+
     private $host;
     private $port;
     private $user;
@@ -13,18 +15,17 @@ class Database
     private $base = "cd2";
     private $con;
 
-    public function __construct($host = "localhost", $port = 3306, $user = "root", $pswd = "")
+    public function __construct($host = "localhost", $port = 3306, $user = "root", $pswd = "", $base = "cd2")
     {
         $this->host = $host;
         $this->port = $port;
         $this->user = $user;
         $this->pswd = $pswd;
+        $this->base = $base;
 
-        if (!$this->connect()) {
-            echo "Erro ao conectar com o banco de dados.";
+        if ($this->connect()) {
+            mysqli_set_charset($this->con, "utf8");
         }
-
-        mysqli_set_charset($this->con, "utf8");
     }
 
     private function connect(): bool
@@ -32,8 +33,15 @@ class Database
         $this->con = mysqli_connect($this->host, $this->user, $this->pswd, $this->base, $this->port);
 
         if (!$this->con) {
+            $this->status["link"]    = false;
+            $this->status["status"]  = "Erro ao conectar no banco de dados";
+            $this->status["message"] = mysqli_error(mysqli_connect($this->host, $this->user, $this->pswd, $this->base, $this->port));
+
             return false;
         }
+        $this->status["link"]    = true;
+        $this->status["status"]  = "Conexão OK";
+        $this->status["message"] = "";
 
         return $this->con->ping();
     }
@@ -70,26 +78,26 @@ class Database
             return false;
         }
 
-        $keys = "";
+        $keys   = "";
         $values = "";
 
-        foreach ($columns as $k => $v ) {
-            $k = mysqli_real_escape_string($this->con, $k);
+        foreach ($columns as $k => $v) {
+            $k    = mysqli_real_escape_string($this->con, $k);
             $keys .= "{$k}, ";
 
             $v = mysqli_real_escape_string($this->con, $v);
-            if( strlen($v) <= 0 ) {
+            if (strlen($v) <= 0) {
                 $values .= "NULL, ";
             } else {
                 $values .= "\"{$v}\", ";
             }
         }
-        $keys = substr($keys, 0, -2);
+        $keys   = substr($keys, 0, -2);
         $values = substr($values, 0, -2);
 
         $query = "INSERT INTO " . $table . "(" . $keys . ")" . " VALUES (" . $values . ")";
 
-        if ($this->con->query($query) ){
+        if ($this->con->query($query)) {
             return true;
         }
 

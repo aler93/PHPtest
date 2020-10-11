@@ -41,8 +41,6 @@ class Busca
 
         if (empty($endereco)) {
             $url     = "https://viacep.com.br/ws/" . $cep . "/xml/";
-            //$opt     = ['http' => ['method' => 'GET']];
-            //$context = stream_context_create($opt);
             $content = file_get_contents($url);
 
             $viacep = $this->parseXML($content);

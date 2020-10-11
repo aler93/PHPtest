@@ -14,7 +14,7 @@
     <div class="card-body">
       <div class="row">
         <div class="col-3">
-          <input type="text" name="cep" value="97060-003" id="cep" class="form-control" placeholder="Digite o CEP"
+          <input type="text" name="cep" value="" id="cep" class="form-control" placeholder="Digite o CEP"
                  maxlength="9">
         </div>
         <div class="col-2">
@@ -48,6 +48,11 @@
   let input;
   let target;
 
+  let db = httpGet(WWW + "testdb.php")
+  if (db.length) {
+    showMsg(db, "danger")
+  }
+
   function onload() {
     input = document.getElementById('cep');
     target = document.getElementById('cep-result');
@@ -75,12 +80,13 @@
     cep = cep.replace(/[^0-9 ]/g, "");
 
     if (cep.length !== 8) {
-      showMsg("CEP inválido. O campo CEP precisa ter 8 dígitos", "danger");
+      showMsg("CEP inválido. O campo CEP precisa ter 8 dígitos (Ex.: 12345-000)", "danger");
 
       return;
     }
 
-    let res = parseXml(httpGet(WWW + "busca.php?cep=" + cep)).xmlcep;
+    let req = httpGet(WWW + "busca.php?cep=" + cep);
+    let res = parseXml(req).xmlcep;
 
     if (res === undefined) {
       showMsg("CEP não encontrado, verifique e tente novamente", "info");
@@ -88,19 +94,23 @@
       return;
     }
 
-    let complemento = "-";
+    var complemento = "";
     if (res.complemento !== undefined) {
       complemento = res.complemento["#text"];
     }
-    let ddd = "-";
+
+    if (complemento === undefined) {
+      complemento = "";
+    }
+    let ddd = "";
     if (res.ddd !== undefined) {
       ddd = res.ddd["#text"];
     }
-    let ibge = "-";
+    let ibge = "";
     if (res.ibge !== undefined) {
       ibge = res.ibge["#text"];
     }
-    let siafi = "-";
+    let siafi = "";
     if (res.siafi !== undefined) {
       siafi = res.siafi["#text"];
     }
@@ -123,6 +133,12 @@
     xmlHttp.open("GET", url, false);
     xmlHttp.send(null);
     return xmlHttp.responseText;
+  }
+
+  function copyInfo() {
+    document.getElementById("copy").select();
+    document.execCommand("copy");
+    alert("Informação de CEP copiada, use CTRL + V para colar");
   }
 </script>
 
