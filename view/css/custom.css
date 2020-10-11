@@ -1,0 +1,14 @@
+h6 {
+    font-weight: 600;
+}
+
+.btn-dismiss {
+    margin-top: -15px;
+    margin-right: -15px;
+    font-size: 1.5rem;
+}
+
+.material-icons {
+    display: inline-flex;
+    vertical-align: top;
+}

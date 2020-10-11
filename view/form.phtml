@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<?php include_once("view/head.phtml") ?>
+
+<body onload="onload()">
+<?php include_once("navbar.phtml") ?>
+
+<div class="mx-5">
+  <div class="card border border-secondary">
+    <div class="card-header bg-secondary">
+      <h5 class="text-light mb-0"><span class="material-icons">search</span> Pesquisa</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-3">
+          <input type="text" name="cep" value="97060-003" id="cep" class="form-control" placeholder="Digite o CEP"
+                 maxlength="9">
+        </div>
+        <div class="col-2">
+          <button class="btn btn-success" onclick="buscarCEP()">
+            Buscar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body py-0" id="show-message"></div>
+
+    <table class="table mb-0">
+      <tr>
+        <th>CEP</th>
+        <th>Logradouro</th>
+        <th>Bairro</th>
+        <th>Localidade/UF</th>
+        <th>Complemento</th>
+        <th>DDD</th>
+        <th>IBGE</th>
+        <th>SIAFI</th>
+      </tr>
+      <tr id="cep-result"></tr>
+    </table>
+  </div>
+</div>
+
+<script type="text/javascript">
+  const WWW = "<?= WWW ?>";
+  let input;
+  let target;
+
+  function onload() {
+    input = document.getElementById('cep');
+    target = document.getElementById('cep-result');
+  }
+
+  function dismissMsg() {
+    document.getElementById("show-message").innerHTML = "";
+  }
+
+  function showMsg(msg, type = "danger") {
+    dismissMsg();
+    if (msg.length > 0) {
+      msg = '<div class="table-' + type + ' p-3 rounded border border-' + type + '  mb-3 shadow-sm">' +
+        '<button class="btn float-right btn-dismiss" onclick="dismissMsg()"> &times; </button>' +
+        '<h6 class="text-' + type + ' mb-0" id="msg">'
+        + msg
+        + '</h6></div>';
+      document.getElementById("show-message").insertAdjacentHTML("afterbegin", msg);
+    }
+  }
+
+  function buscarCEP() {
+    dismissMsg();
+    let cep = input.value;
+    cep = cep.replace(/[^0-9 ]/g, "");
+
+    if (cep.length !== 8) {
+      showMsg("CEP inválido. O campo CEP precisa ter 8 dígitos", "danger");
+
+      return;
+    }
+
+    let res = parseXml(httpGet(WWW + "busca.php?cep=" + cep)).xmlcep;
+
+    if (res === undefined) {
+      showMsg("CEP não encontrado, verifique e tente novamente", "info");
+
+      return;
+    }
+
+    let complemento = "-";
+    if (res.complemento !== undefined) {
+      complemento = res.complemento["#text"];
+    }
+    let ddd = "-";
+    if (res.ddd !== undefined) {
+      ddd = res.ddd["#text"];
+    }
+    let ibge = "-";
+    if (res.ibge !== undefined) {
+      ibge = res.ibge["#text"];
+    }
+    let siafi = "-";
+    if (res.siafi !== undefined) {
+      siafi = res.siafi["#text"];
+    }
+
+    let td = "<td>" + res.cep['#text'] + "</td>";
+    td += "<td>" + res.logradouro['#text'] + "</td>";
+    td += "<td>" + res.bairro['#text'] + "</td>";
+    td += "<td>" + res.localidade['#text'] + "/" + res.uf['#text'] + "</td>";
+    td += "<td>" + complemento + "</td>";
+    td += "<td>" + ddd + "</td>";
+    td += "<td>" + ibge + "</td>";
+    td += "<td>" + siafi + "</td>";
+
+    target.innerHTML = "";
+    target.insertAdjacentHTML("afterbegin", td)
+  }
+
+  function httpGet(url) {
+    const xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", url, false);
+    xmlHttp.send(null);
+    return xmlHttp.responseText;
+  }
+</script>
+
+</body>
+</html>

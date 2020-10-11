@@ -2,6 +2,8 @@
 
 namespace app;
 
+use MongoDB\Driver\Query;
+
 class Database
 {
     private $host;
@@ -21,6 +23,8 @@ class Database
         if (!$this->connect()) {
             echo "Erro ao conectar com o banco de dados.";
         }
+
+        mysqli_set_charset($this->con, "utf8");
     }
 
     private function connect(): bool
@@ -38,21 +42,22 @@ class Database
     {
         $query = "SELECT * FROM " . $table;
 
-        if( !empty($where) ) {
+        if (!empty($where)) {
             $query .= " WHERE ";
-            foreach( $where as $key => $val ) {
-                $query .= "{$key} = {$val} AND";
+            foreach ($where as $key => $val) {
+                $query .= "{$key} = \"{$val}\" AND";
             }
 
-            $query = substr($query, 0, -5);
+            $query = substr($query, 0, -4);
         }
 
         $row = $this->con->query($query);
+
         if ($row->num_rows <= 0) {
             return [];
         }
 
-        return [];
+        return $row->fetch_assoc();
     }
 
     public function create(string $table, array $columns): bool
@@ -65,6 +70,29 @@ class Database
             return false;
         }
 
-        return true;
+        $keys = "";
+        $values = "";
+
+        foreach ($columns as $k => $v ) {
+            $k = mysqli_real_escape_string($this->con, $k);
+            $keys .= "{$k}, ";
+
+            $v = mysqli_real_escape_string($this->con, $v);
+            if( strlen($v) <= 0 ) {
+                $values .= "NULL, ";
+            } else {
+                $values .= "\"{$v}\", ";
+            }
+        }
+        $keys = substr($keys, 0, -2);
+        $values = substr($values, 0, -2);
+
+        $query = "INSERT INTO " . $table . "(" . $keys . ")" . " VALUES (" . $values . ")";
+
+        if ($this->con->query($query) ){
+            return true;
+        }
+
+        return false;
     }
 }

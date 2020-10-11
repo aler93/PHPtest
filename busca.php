@@ -9,7 +9,7 @@ use app\Busca;
 require 'app/Busca.php';
 require 'config.php';
 
-header('Content-Type: text/json; charset=utf-8');
+header('Content-Type: text/xml; charset=utf-8');
 
 $cep = preg_replace('/\D/', "", $_GET["cep"]);
 if (strlen($cep) != 8) {
@@ -18,8 +18,9 @@ if (strlen($cep) != 8) {
     die();
 }
 
+$db  = new Busca();
+$xml = $db->fetchCep($cep);
 
-$db = new Busca();
-$db->fetchCep($cep);
-
-//echo json_encode(["state" => 200, "msg" => "end", "data" => []]);
+if (is_string($xml)) {
+    echo $xml;
+}
