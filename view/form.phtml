@@ -77,6 +77,7 @@
 
   function buscarCEP() {
     dismissMsg();
+    target.innerHTML = "";
     let cep = input.value;
     cep = cep.replace(/[^0-9 ]/g, "");
 
@@ -125,7 +126,6 @@
     td += "<td>" + ibge + "</td>";
     td += "<td>" + siafi + "</td>";
 
-    target.innerHTML = "";
     target.insertAdjacentHTML("afterbegin", td);
   }
 
@@ -134,12 +134,6 @@
     xmlHttp.open("GET", url, false);
     xmlHttp.send(null);
     return xmlHttp.responseText;
-  }
-
-  function copyInfo() {
-    document.getElementById("copy").select();
-    document.execCommand("copy");
-    alert("Informação de CEP copiada, use CTRL + V para colar");
   }
 </script>
 
