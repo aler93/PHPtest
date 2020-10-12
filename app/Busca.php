@@ -46,7 +46,7 @@ class Busca
             $viacep = $this->parseXML($content);
 
             if (!$this->db->create("cep", $viacep)) {
-                return "";
+                return $content;
             }
 
             return $content;

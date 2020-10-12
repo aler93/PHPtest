@@ -105,7 +105,6 @@ class Database
 
         $query = "INSERT INTO " . $this->base . "." . $table . "(" . $keys . ")" . " VALUES (" . $values . ")";
 
-        var_dump($query);
         if ($this->con->query($query)) {
             return true;
         }
