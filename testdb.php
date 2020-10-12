@@ -1,14 +1,10 @@
 <?php
 
-ini_set("display_errors", 0);
-error_reporting(E_ERROR);
-
 use app\Database;
 
 
 require 'app/Database.php';
 require 'config.php';
-require 'helper.php';
 
 header('Content-Type: text/plain; charset=utf-8');
 

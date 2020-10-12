@@ -9,7 +9,6 @@ foreach( $exp as $dir ) {
 }
 
 define("PROJECT", $uri);
-//define("ROOT", $_SERVER["DOCUMENT_ROOT"] . "/" . PROJECT . "/");
 define("ROOT", "./");
 define("WWW", "http://" . $_SERVER["HTTP_HOST"] . "/" . PROJECT . "/");
 define("CSS", WWW . "view/css/");
