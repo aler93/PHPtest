@@ -108,7 +108,6 @@ class Database
         if ($this->con->query($query)) {
             return true;
         }
-        echo mysqli_error($this->con);
 
         return false;
     }
