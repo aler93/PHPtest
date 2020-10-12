@@ -1,6 +1,14 @@
 <?php
 
-define("PROJECT", explode("/", $_SERVER["REQUEST_URI"])[1]);
+$uri = "";
+$exp = explode("/", $_SERVER["REQUEST_URI"]);
+foreach( $exp as $dir ) {
+    if( strlen($dir) > 0 ) {
+        $uri .= $dir . "/";
+    }
+}
+
+define("PROJECT", $uri);
 define("ROOT", $_SERVER["DOCUMENT_ROOT"] . "/" . PROJECT . "/");
 define("WWW", "http://" . $_SERVER["HTTP_HOST"] . "/" . PROJECT . "/");
 define("CSS", WWW . "view/css/");

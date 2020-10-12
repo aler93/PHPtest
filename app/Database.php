@@ -34,13 +34,13 @@ class Database
 
         if (!$this->con) {
             $this->status["link"]    = false;
-            $this->status["status"]  = "Erro ao conectar no banco de dados";
+            $this->status["status"]  = "Erro ao conectar no banco de dados.";
             $this->status["message"] = mysqli_error(mysqli_connect($this->host, $this->user, $this->pswd, $this->base, $this->port));
 
             return false;
         }
         $this->status["link"]    = true;
-        $this->status["status"]  = "Conexão OK";
+        $this->status["status"]  = "Conexão OK.";
         $this->status["message"] = "";
 
         return $this->con->ping();

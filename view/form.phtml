@@ -15,11 +15,11 @@
       <div class="row">
         <div class="col-3">
           <input type="text" name="cep" value="" id="cep" class="form-control" placeholder="Digite o CEP"
-                 maxlength="9">
+                 maxlength="9" autofocus>
         </div>
         <div class="col-2">
-          <button class="btn btn-success" onclick="buscarCEP()">
-            Buscar
+          <button class="btn btn-success" id="buscaCep" onclick="buscarCEP()">
+            Consultar
           </button>
         </div>
       </div>
@@ -50,7 +50,8 @@
 
   let db = httpGet(WWW + "testdb.php")
   if (db.length) {
-    showMsg(db, "danger")
+    showMsg(db, "danger");
+    document.getElementById("buscaCep").disabled = true;
   }
 
   function onload() {
@@ -125,7 +126,7 @@
     td += "<td>" + siafi + "</td>";
 
     target.innerHTML = "";
-    target.insertAdjacentHTML("afterbegin", td)
+    target.insertAdjacentHTML("afterbegin", td);
   }
 
   function httpGet(url) {

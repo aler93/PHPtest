@@ -9,7 +9,7 @@ function parseXml(xml, arrayTags) {
       throw dom.parseError.reason + " " + dom.parseError.srcText;
     }
   } else {
-    throw "Erro ao conveter string para XML!";
+    throw "Erro ao conveter XML!";
   }
 
   function isArray(o) {
