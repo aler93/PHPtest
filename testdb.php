@@ -12,5 +12,5 @@ $db  = new Database(DB_HOST, DB_PORT, DB_USER, DB_PSWD, DB_NAME);
 $status = "";
 
 if( !$db->status["link"] ) {
-    echo $db->status["status"] . "Não será possível fazer pesquisas.";
+    echo $db->status["status"] . " Não será possível fazer pesquisas.";
 }
