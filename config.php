@@ -22,7 +22,7 @@ define("DB_HOST", "localhost");
 define("DB_PORT", "3306");
 define("DB_USER", "root");
 define("DB_PSWD", "");
-define("DB_NAME", "cd2_naimayer");
+define("DB_NAME", "cd2");
 
 // define("ENV_OS", "Fedora 32 5.8.12-200");
 // define("ENV_PHP_VERSION", "7.4.11");
