@@ -90,7 +90,7 @@
     let req = httpGet(WWW + "busca.php?cep=" + cep);
     let res = parseXml(req).xmlcep;
 
-    if (res === undefined) {
+    if (res === undefined || res.hasOwnProperty("erro")) {
       showMsg("CEP não encontrado, verifique e tente novamente", "info");
 
       return;
