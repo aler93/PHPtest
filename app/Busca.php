@@ -12,7 +12,7 @@ class Busca
 
     public function __construct()
     {
-        $this->db = new Database(DB_HOST, DB_PORT, DB_USER, DB_PSWD);
+        $this->db = new Database(DB_HOST, DB_PORT, DB_USER, DB_PSWD, DB_NAME);
     }
 
     private function parseXML(string $data): array

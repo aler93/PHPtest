@@ -12,10 +12,10 @@ class Database
     private $port;
     private $user;
     private $pswd;
-    private $base = "cd2";
+    private $base;
     private $con;
 
-    public function __construct($host = "localhost", $port = 3306, $user = "root", $pswd = "", $base = "cd2")
+    public function __construct($host = "localhost", $port = 3306, $user = "root", $pswd = "", $base = "")
     {
         $this->host = $host;
         $this->port = $port;
@@ -48,7 +48,11 @@ class Database
 
     public function read(string $table, $where = []): array
     {
-        $query = "SELECT * FROM " . $table;
+        if( !$this->con ) {
+            return [];
+        }
+
+        $query = "SELECT * FROM " . $this->base . "." . $table;
 
         if (!empty($where)) {
             $query .= " WHERE ";
@@ -60,6 +64,10 @@ class Database
         }
 
         $row = $this->con->query($query);
+
+        if (!$row) {
+            return [];
+        }
 
         if ($row->num_rows <= 0) {
             return [];
@@ -95,11 +103,13 @@ class Database
         $keys   = substr($keys, 0, -2);
         $values = substr($values, 0, -2);
 
-        $query = "INSERT INTO " . $table . "(" . $keys . ")" . " VALUES (" . $values . ")";
+        $query = "INSERT INTO " . $this->base . "." . $table . "(" . $keys . ")" . " VALUES (" . $values . ")";
 
+        var_dump($query);
         if ($this->con->query($query)) {
             return true;
         }
+        echo mysqli_error($this->con);
 
         return false;
     }
